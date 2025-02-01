@@ -4,7 +4,10 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from backend import models, crud, auth
+from backend.auth import create_access_token, verify_password, get_user
+from backend.crud import create_user
 from backend.database import engine, SessionLocal
+from backend.schemas import User, UserCreate
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -23,6 +26,31 @@ def get_db():
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     return templates.TemplateResponse("base.html", {"request": request})
+
+
+@app.get("/login", response_class=HTMLResponse)
+def login_page(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+@app.get("/signup", response_class=HTMLResponse)
+def signup_page(request: Request):
+    return templates.TemplateResponse("signup.html", {"request": request})
+
+
+@app.post("/signup", response_model=User)
+def sign_up(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = get_user(db, user.username)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Username already registered")
+    return create_user(db, user.username, user.password)
+
+@app.post("/login")
+def login(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = get_user(db, user.username)
+    if not db_user or not verify_password(user.password, db_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Invalid credentials")
+    access_token = create_access_token(data={"sub": user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
 
 # Projekte verwalten
 @app.get("/projects", response_class=HTMLResponse)

@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from . import models, schemas
-from .auth import get_password_hash
+from .auth import get_password_hash, pwd_context
+from .schemas import User
+
 
 # Benutzer
 def get_user(db: Session, username: str):
@@ -68,3 +70,18 @@ def create_room(db: Session, name: str, outer_wall_area: float, roof_area: float
     db.commit()
     db.refresh(db_room)
     return db_room
+
+
+def create_user(db: Session, username: str, password: str):
+    hashed_password = pwd_context.hash(password)
+    db_user = User(username=username, hashed_password=hashed_password)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+def get_user(db: Session, username: str):
+    return db.query(User).filter(User.username == username).first()
+
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)

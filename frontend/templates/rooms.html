@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-8">
+    <h1 class="text-2xl font-bold mb-4">Räume für Etage</h1>
+    <form hx-post="/rooms/{{ floor_id }}" hx-target="#rooms-list" hx-swap="beforeend" class="mb-6">
+        <input type="text" name="name" placeholder="Raumname" required class="p-2 border rounded">
+        <input type="number" step="0.1" name="outer_wall_area" placeholder="Außenwandfläche (m²)" required class="p-2 border rounded">
+        <input type="number" step="0.1" name="roof_area" placeholder="Dachfläche (m²)" required class="p-2 border rounded">
+        <input type="number" step="0.1" name="roof_window_area" placeholder="Dachfensterfläche (m²)" required class="p-2 border rounded">
+        <input type="number" step="0.1" name="outer_window_area" placeholder="Außenfensterfläche (m²)" required class="p-2 border rounded">
+        <input type="number" step="0.1" name="outer_door_area" placeholder="Außentürfläche (m²)" required class="p-2 border rounded">
+        <input type="number" step="0.1" name="ceiling_to_unheated_area" placeholder="Decke zu unbeheizten Bereichen (m²)" required class="p-2 border rounded">
+        <input type="number" step="0.1" name="floor_to_unheated_area" placeholder="Boden zu unbeheizten Bereichen (m²)" required class="p-2 border rounded">
+        <input type="number" step="0.1" name="wall_to_unheated_area" placeholder="Wände zu unbeheizten Bereichen (m²)" required class="p-2 border rounded">
+        <button type="submit" class="p-2 bg-blue-500 text-white rounded">Raum erstellen</button>
+    </form>
+    <div id="rooms-list">
+        {% for room in rooms %}
+        <div class="p-4 border rounded mb-2">
+            <span class="text-blue-500">{{ room.name }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    <a href="/results/{{ project_id }}" class="mt-4 inline-block p-2 bg-green-500 text-white rounded">Heizlast berechnen</a>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-8">
+    <h1 class="text-2xl font-bold mb-4">Heizlastberechnung</h1>
+    <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">Ergebnisse</h2>
+        <table class="min-w-full bg-white">
+            <thead>
+                <tr>
+                    <th class="py-2">Gebäude</th>
+                    <th class="py-2">Etage</th>
+                    <th class="py-2">Raum</th>
+                    <th class="py-2">Heizlast (W)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr class="border-t">
+                    <td class="py-2">{{ result.building }}</td>
+                    <td class="py-2">{{ result.floor }}</td>
+                    <td class="py-2">{{ result.room }}</td>
+                    <td class="py-2">{{ result.heat_loss | round(2) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="mt-4">
+            <p class="text-lg font-semibold">Gesamte Heizlast: <span class="text-blue-500">{{ total_heat_loss | round(2) }} W</span></p>
+        </div>
+    </div>
+    <a href="/projects" class="mt-4 inline-block p-2 bg-blue-500 text-white rounded">Zurück zu Projekten</a>
+</div>
+{% endblock %}

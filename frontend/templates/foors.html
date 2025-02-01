@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-8">
+    <h1 class="text-2xl font-bold mb-4">Etagen für Gebäude</h1>
+    <form hx-post="/floors/{{ building_id }}" hx-target="#floors-list" hx-swap="beforeend" class="mb-6">
+        <input type="text" name="name" placeholder="Etagenname" required class="p-2 border rounded">
+        <button type="submit" class="p-2 bg-blue-500 text-white rounded">Etage erstellen</button>
+    </form>
+    <div id="floors-list">
+        {% for floor in floors %}
+        <div class="p-4 border rounded mb-2">
+            <a href="/rooms/{{ floor.id }}" class="text-blue-500 hover:underline">{{ floor.name }}</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

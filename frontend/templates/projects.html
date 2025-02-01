@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-8">
+    <h1 class="text-2xl font-bold mb-4">Meine Projekte</h1>
+    <form hx-post="/projects" hx-target="#projects-list" hx-swap="beforeend" class="mb-6">
+        <input type="text" name="name" placeholder="Projektname" required class="p-2 border rounded">
+        <button type="submit" class="p-2 bg-blue-500 text-white rounded">Projekt erstellen</button>
+    </form>
+    <div id="projects-list">
+        {% for project in projects %}
+        <div class="p-4 border rounded mb-2">
+            <a href="/buildings/{{ project.id }}" class="text-blue-500 hover:underline">{{ project.name }}</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

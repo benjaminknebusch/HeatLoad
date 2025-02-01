@@ -4,8 +4,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from .models import User
-from .schemas import TokenData
-from .database import SessionLocal
+from .database import SessionLocal, get_db
 
 SECRET_KEY = "your-secret-key"
 ALGORITHM = "HS256"

@@ -1,13 +1,28 @@
+from passlib.context import CryptContext
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from .database import Base
+# Password hashing setup
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class User(Base):
     __tablename__ = "users"
+
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
+
+    # Relationship with projects
     projects = relationship("Project", back_populates="owner")
+
+    def set_password(self, password: str):
+        """Set the password after hashing it."""
+        self.hashed_password = pwd_context.hash(password)
+
+    def verify_password(self, password: str):
+        """Verify a given password against the stored hashed password."""
+        return pwd_context.verify(password, self.hashed_password)
+
 
 class Project(Base):
     __tablename__ = "projects"

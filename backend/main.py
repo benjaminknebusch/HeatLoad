@@ -2,14 +2,14 @@ from fastapi import FastAPI, Depends, HTTPException, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from . import models, schemas, crud, auth
-from .database import SessionLocal, engine
-from .auth import get_current_user
+
+from backend import models, crud, auth
+from backend.database import engine, SessionLocal
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory="frontend/templates")
 
 # Dependency
 def get_db():
@@ -101,3 +101,10 @@ async def read_results(request: Request, project_id: int, db: Session = Depends(
                 })
     total_heat_loss = sum(result["heat_loss"] for result in results)
     return templates.TemplateResponse("results.html", {"request": request, "results": results, "total_heat_loss": total_heat_loss})
+
+def main():
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=9090)
+
+if __name__ == '__main__':
+    main()

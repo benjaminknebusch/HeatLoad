@@ -8,6 +8,10 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
+class TokenData(BaseModel):
+    username: str
+
+
 class User(UserBase):
     id: int
 
